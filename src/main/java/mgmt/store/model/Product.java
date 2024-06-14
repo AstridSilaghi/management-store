@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 public class Product {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(name = "product_name")
@@ -34,6 +34,14 @@ public class Product {
 	
 	public Product() {
 		super();
+	}
+	
+	public Product(String name, Float price, String description, String isAvailable) {
+		super();
+		this.name = name;
+		this.price = price;
+		this.description = description;
+		this.isAvailable = isAvailable;
 	}
 	
 	public Product(Long id, String name, Float price, String description, String isAvailable) {
