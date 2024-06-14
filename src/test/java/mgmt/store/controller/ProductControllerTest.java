@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import mgmt.store.model.AVAILABILITY;
 import mgmt.store.model.Product;
 import mgmt.store.service.ProductService;
 
@@ -39,8 +40,8 @@ public class ProductControllerTest {
 	@Test
 	void getProductsShouldListProducts() throws Exception {
 		List<Product> expectedProducts = new ArrayList<>(
-				Arrays.asList(new Product(Long.valueOf(1), "Products1", 100.0f, "Description for Product1", false),
-						new Product(Long.valueOf(2), "Products2", 430.0f, "Description for Product2", true)));
+				Arrays.asList(new Product(Long.valueOf(1), "Products1", 100.0f, "Description for Product1", AVAILABILITY.NO),
+						new Product(Long.valueOf(2), "Products2", 430.0f, "Description for Product2", AVAILABILITY.YES)));
 		when(service.getAllProducts()).thenReturn(expectedProducts);
 		MvcResult result = this.mockMvc.perform(get("/product")).andExpect(status().isOk()).andReturn();
 
