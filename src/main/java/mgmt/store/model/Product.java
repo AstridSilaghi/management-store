@@ -1,6 +1,9 @@
 package mgmt.store.model;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +12,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,7 +20,7 @@ import jakarta.persistence.Table;
 public class Product {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(name = "product_name")
@@ -31,9 +35,19 @@ public class Product {
 	@Column(name = "availability")
 	private String isAvailable;
 
+	@ManyToMany(mappedBy = "products")
+	private Set<Order> orders = new HashSet<>();
 	
 	public Product() {
 		super();
+	}
+	
+	public Product(String name, Float price, String description, String isAvailable) {
+		super();
+		this.name = name;
+		this.price = price;
+		this.description = description;
+		this.isAvailable = isAvailable;
 	}
 	
 	public Product(Long id, String name, Float price, String description, String isAvailable) {
