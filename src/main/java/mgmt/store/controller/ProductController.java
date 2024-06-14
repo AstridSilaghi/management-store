@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import jakarta.websocket.server.PathParam;
 import mgmt.store.dto.ProductDto;
 import mgmt.store.exceptions.ProductNotFoundException;
 import mgmt.store.model.Product;
@@ -49,12 +49,30 @@ public class ProductController {
 		return productService.getProductById(id).orElseThrow(() -> new ProductNotFoundException(id));
 	}
 	
+	@GetMapping("/product-price-min")
+	public List<Product> listProductsPriceGreaterThan(@RequestParam ("min") Long minPrice) {
+		log.info("Get product with price greater than {}", minPrice);
+		return productService.getProductsPriceGreaterThan(minPrice);
+	}
+	
+	@GetMapping("/product-price-max")
+	public List<Product> listProductsPriceLessThan(@RequestParam ("max") Long maxPrice) {
+		log.info("Get product with price less than  {} ", maxPrice);
+		return productService.getProductsPriceLessThan(maxPrice);
+	}
+	
 	@GetMapping("/product-price-range")
-	public List<Product> listProductWithPriceRange(@PathParam("min") Long minPrice, @PathParam("max") Long maxPrice) {
+	public List<Product> listProductsWithPriceRange(@RequestParam ("min") Long minPrice, @RequestParam ("max") Long maxPrice) {
 		log.info("Get product with price between : {} and {} ", minPrice, maxPrice);
 		return productService.getProductsWithinPriceRange(minPrice, maxPrice);
 	}
 
+	@GetMapping("/on-stock")
+	public List<Product> listProductsOnStock() {
+		log.info("Get products on stock");
+		return productService.getProductsAvailable();
+	}
+	
 	@PostMapping("/add-product")
 	public Product create(@RequestBody ProductDto productDto) {
 		log.info("Create a new product: " + productDto);
@@ -62,9 +80,9 @@ public class ProductController {
 	}
 
 	@PutMapping("/update-product{id}")
-	public Product update(@PathVariable("id") Long id, @RequestBody Product product) {
-		log.info("Update the product: " + product);
-		return productService.updateProduct(id, product);
+	public Product update(@PathVariable("id") Long id, @RequestBody ProductDto productDto) {
+		log.info("Update the product: " + productDto);
+		return productService.updateProduct(id, productDto);
 	}
 
 	@PutMapping("/change-price{id}")

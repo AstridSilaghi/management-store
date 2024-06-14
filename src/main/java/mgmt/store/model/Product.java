@@ -29,15 +29,14 @@ public class Product {
 	private String description;
 	
 	@Column(name = "availability")
-	@Enumerated(EnumType.ORDINAL)
-	private AVAILABILITY isAvailable;
+	private String isAvailable;
 
 	
 	public Product() {
 		super();
 	}
 	
-	public Product(Long id, String name, Float price, String description, AVAILABILITY isAvailable) {
+	public Product(Long id, String name, Float price, String description, String isAvailable) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -79,11 +78,11 @@ public class Product {
 	}
 
 	
-	public AVAILABILITY getIsAvailable() {
+	public String getIsAvailable() {
 		return isAvailable;
 	}
 
-	public void setIsAvailable(AVAILABILITY isAvailable) {
+	public void setIsAvailable(String isAvailable) {
 		this.isAvailable = isAvailable;
 	}
 

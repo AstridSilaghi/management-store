@@ -23,6 +23,10 @@ public class ProductDto {
 	
 	public ProductDto() {
 		super();
+		this.name = "";
+		this.price = 0.0f;
+		this.description = "";
+		this.isAvailable = AVAILABILITY.NO;
 	}
 
 	public ProductDto(String name, Float price, String description, AVAILABILITY isAvailable) {

@@ -18,11 +18,17 @@ public interface ProductService {
 	
 	void deleteAllProducts();
 	
-	Product updateProduct(Long id, Product product);
+	Product updateProduct(Long id, ProductDto productDto);
 	
 	Optional<Product> updateProductPrice(Long id, Float price);
 	
+	List<Product> getProductsPriceGreaterThan(Long minPrice);
+	
+	List<Product> getProductsPriceLessThan(Long maxPrice);
+	
 	List<Product> getProductsWithinPriceRange(Long minPrice, Long maxPrice);
+	
+	List<Product> getProductsAvailable();
 
 	
 	
