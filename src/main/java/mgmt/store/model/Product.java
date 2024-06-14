@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,14 +29,14 @@ public class Product {
 	private String description;
 	
 	@Column(name = "availability")
-	private Boolean isAvailable;
+	private String isAvailable;
 
 	
 	public Product() {
 		super();
 	}
 	
-	public Product(Long id, String name, Float price, String description, boolean isAvailable) {
+	public Product(Long id, String name, Float price, String description, String isAvailable) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -75,11 +77,12 @@ public class Product {
 		this.description = description;
 	}
 
-	public boolean isAvailable() {
+	
+	public String getIsAvailable() {
 		return isAvailable;
 	}
 
-	public void setAvailable(boolean isAvailable) {
+	public void setIsAvailable(String isAvailable) {
 		this.isAvailable = isAvailable;
 	}
 
