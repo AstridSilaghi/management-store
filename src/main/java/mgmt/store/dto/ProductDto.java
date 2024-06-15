@@ -68,4 +68,10 @@ public class ProductDto {
 	public void setIsAvailable(AVAILABILITY isAvailable) {
 		this.isAvailable = isAvailable;
 	}
+
+	@Override
+	public String toString() {
+		return "ProductDto [name=" + name + ", price=" + price + ", description=" + description + ", isAvailable="
+				+ isAvailable + "]";
+	}
 }

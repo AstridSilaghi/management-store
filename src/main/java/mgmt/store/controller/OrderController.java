@@ -36,17 +36,17 @@ public class OrderController {
 	public List<Order> list() {
 		log.info("Listing orders...");
 		List<Order> orders = orderService.getAllOrders();
-		log.info(orders.toString());
+		orders.forEach(o -> log.info(o.toString()));
 		return orders;
 	}
 
-	@GetMapping("/find-order{id}")
+	@GetMapping("/find-order-id{id}")
 	public Order list(@PathVariable("id") Long id) {
 		log.info("Get order with id : {}", id);
 		return orderService.getOrderById(id).orElseThrow(() -> new OrderNotFoundException(id));
 	}
 
-	@GetMapping("/find-order{number}")
+	@GetMapping("/find-order-number{number}")
 	public Order list(@PathVariable("number") String number) {
 		log.info("Get order with number {} ", number);
 		return orderService.getOrderByNumber(number).orElseThrow(() -> new OrderNotFoundException(number));

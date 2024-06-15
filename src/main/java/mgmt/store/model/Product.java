@@ -7,8 +7,6 @@ import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -108,7 +106,7 @@ public class Product {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(description, id, isAvailable, name, price);
+		return Objects.hash(description, id, isAvailable, name, orders, price);
 	}
 
 	@Override
@@ -121,7 +119,7 @@ public class Product {
 			return false;
 		Product other = (Product) obj;
 		return Objects.equals(description, other.description) && Objects.equals(id, other.id)
-				&& isAvailable == other.isAvailable && Objects.equals(name, other.name)
-				&& Objects.equals(price, other.price);
+				&& Objects.equals(isAvailable, other.isAvailable) && Objects.equals(name, other.name)
+				&& Objects.equals(orders, other.orders) && Objects.equals(price, other.price);
 	}
 }
