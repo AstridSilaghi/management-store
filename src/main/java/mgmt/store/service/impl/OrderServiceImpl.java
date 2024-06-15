@@ -8,10 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import mgmt.store.constants.Constants;
 import mgmt.store.dto.OrderDto;
 import mgmt.store.dto.converter.ConvertOrderDtoToEntity;
 import mgmt.store.exceptions.OrderNotFoundException;
 import mgmt.store.exceptions.ProductNotFoundException;
+import mgmt.store.exceptions.ProductOutOfStock;
 import mgmt.store.model.Order;
 import mgmt.store.model.Product;
 import mgmt.store.repository.OrderRepository;
@@ -94,8 +96,15 @@ public class OrderServiceImpl implements OrderService {
 		if(existingOrder.isEmpty()) {
 			throw new OrderNotFoundException(orderId);
 		}
+		if(!productIsAvailable(addedProduct.get())) {
+			throw new ProductOutOfStock(prodId);
+		}
 		Order order = existingOrder.get();
 		order.getProducts().add(addedProduct.get());
 		return orderRepo.save(order);
+	}
+	
+	private boolean productIsAvailable(Product product) {
+		return product.getIsAvailable().equals(Constants.YES);
 	}
 }

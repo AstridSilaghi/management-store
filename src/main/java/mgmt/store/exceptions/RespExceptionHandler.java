@@ -19,6 +19,11 @@ public class RespExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<Object> handleWrongBodyFormat(Exception ex) {
 		return new ResponseEntity<Object>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(ProductOutOfStock.class)
+	public ResponseEntity<Object> handleProductOutOfStock(Exception ex) {
+		return new ResponseEntity<Object>(ex.getMessage(), HttpStatus.NOT_FOUND);
+	}
 
 
 }
