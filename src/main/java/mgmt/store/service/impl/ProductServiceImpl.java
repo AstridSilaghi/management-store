@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import mgmt.store.dto.ProductDto;
 import mgmt.store.dto.converter.ConvertProductDtoToEntity;
+import mgmt.store.exceptions.ProductNotFoundException;
 import mgmt.store.model.Product;
 import mgmt.store.repository.ProductRepository;
 import mgmt.store.service.ProductService;
@@ -51,6 +52,8 @@ public class ProductServiceImpl implements ProductService {
 		Optional<Product> product = productRepo.findById(id);
 		if (!product.isEmpty()) {
 			productRepo.deleteById(id);
+		} else {
+			throw new ProductNotFoundException(id);
 		}
 	}
 	
@@ -78,7 +81,26 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Optional<Product> updateProductPrice(Long id, Float price) {
-		return productRepo.findById(id);
+		return productRepo.findById(id).map(product -> {
+			product.setPrice(price);
+			return Optional.of(productRepo.save(product));
+		}).orElseThrow(() -> new ProductNotFoundException(id));
+	}
+	
+	@Override
+	public Optional<Product> updateProductName(Long id, String name) {
+		return productRepo.findById(id).map(product -> {
+			product.setName(name);
+			return Optional.of(productRepo.save(product));
+		}).orElseThrow(() -> new ProductNotFoundException(id));
+	}
+	
+	@Override
+	public Optional<Product> updateProductDescription(Long id, String description) {
+		return productRepo.findById(id).map(product -> {
+			product.setDescription(description);
+			return Optional.of(productRepo.save(product));
+		}).orElseThrow(() -> new ProductNotFoundException(id));
 	}
 	
 	@Override

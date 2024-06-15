@@ -86,7 +86,7 @@ public class ProductController {
 	}
 
 	@PutMapping("/change-price{id}")
-	public Product update(@PathVariable("id") Long id, @RequestBody JsonNode jsonNode) {
+	public Product updateProductPrice(@PathVariable("id") Long id, @RequestBody JsonNode jsonNode) {
 		log.info("Update the price for product with id: " + id);
 		float price = 0.0f;
 		try {
@@ -96,7 +96,21 @@ public class ProductController {
 		}
 		return productService.updateProductPrice(id, price).orElseThrow(() -> new ProductNotFoundException(id));
 	}
+	
+	@PutMapping("/change-name{id}")
+	public Product updateProductName(@PathVariable("id") Long id, @RequestBody JsonNode jsonNode) {
+		log.info("Update the name for product with id: " + id);
+		String name = jsonNode.get("name").asText();
+		return productService.updateProductName(id, name).orElseThrow(() -> new ProductNotFoundException(id));
+	}
 
+	@PutMapping("/change-description{id}")
+	public Product updateProductDescription(@PathVariable("id") Long id, @RequestBody JsonNode jsonNode) {
+		log.info("Update the description for product with id: " + id);
+		String name = jsonNode.get("description").asText();
+		return productService.updateProductDescription(id, name).orElseThrow(() -> new ProductNotFoundException(id));
+	}
+	
 	@DeleteMapping("/remove-product{id}")
 	public void delete(@PathVariable Long id) {
 		log.info("Delete product with id : " + id);

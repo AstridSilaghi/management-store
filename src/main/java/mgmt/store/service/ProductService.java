@@ -22,6 +22,10 @@ public interface ProductService {
 	
 	Optional<Product> updateProductPrice(Long id, Float price);
 	
+	Optional<Product> updateProductName(Long id, String name);
+	
+	Optional<Product> updateProductDescription(Long id, String description);
+	
 	List<Product> getProductsPriceGreaterThan(Long minPrice);
 	
 	List<Product> getProductsPriceLessThan(Long maxPrice);
