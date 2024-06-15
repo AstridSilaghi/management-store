@@ -44,7 +44,9 @@ If a product is not on stock then it can not be added in an order.
 + PUT /order/update-order{order_id}/product{prod_id}
 
 ## To view Swagger 3 API docs
-Start the server and browse to http://localhost:8081/swagger-ui/index.html
+Start the server and browse to http://localhost:8081/swagger-ui/index.html .
+
 Alternatively, Postman can be used to make requests.
+
 ## To view the H2 in-memory database
 To view and query the database you can browse to http://localhost:8081/h2-console using username: 'admin' with password: "password".
