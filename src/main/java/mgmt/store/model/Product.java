@@ -1,12 +1,16 @@
 package mgmt.store.model;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,7 +18,7 @@ import jakarta.persistence.Table;
 public class Product {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(name = "product_name")
@@ -27,14 +31,24 @@ public class Product {
 	private String description;
 	
 	@Column(name = "availability")
-	private Boolean isAvailable;
+	private String isAvailable;
 
+	@ManyToMany(mappedBy = "products")
+	private Set<Order> orders = new HashSet<>();
 	
 	public Product() {
 		super();
 	}
 	
-	public Product(Long id, String name, Float price, String description, boolean isAvailable) {
+	public Product(String name, Float price, String description, String isAvailable) {
+		super();
+		this.name = name;
+		this.price = price;
+		this.description = description;
+		this.isAvailable = isAvailable;
+	}
+	
+	public Product(Long id, String name, Float price, String description, String isAvailable) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -75,11 +89,12 @@ public class Product {
 		this.description = description;
 	}
 
-	public boolean isAvailable() {
+	
+	public String getIsAvailable() {
 		return isAvailable;
 	}
 
-	public void setAvailable(boolean isAvailable) {
+	public void setIsAvailable(String isAvailable) {
 		this.isAvailable = isAvailable;
 	}
 
@@ -91,7 +106,7 @@ public class Product {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(description, id, isAvailable, name, price);
+		return Objects.hash(description, id, isAvailable, name, orders, price);
 	}
 
 	@Override
@@ -104,7 +119,7 @@ public class Product {
 			return false;
 		Product other = (Product) obj;
 		return Objects.equals(description, other.description) && Objects.equals(id, other.id)
-				&& isAvailable == other.isAvailable && Objects.equals(name, other.name)
-				&& Objects.equals(price, other.price);
+				&& Objects.equals(isAvailable, other.isAvailable) && Objects.equals(name, other.name)
+				&& Objects.equals(orders, other.orders) && Objects.equals(price, other.price);
 	}
 }
