@@ -38,9 +38,14 @@ public class SecurityConfig {
 	@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { 
         return http.csrf().disable()
+        		.headers().frameOptions().disable()
+        		.and()
                 .authorizeHttpRequests().requestMatchers("/swagger-ui/**", "/v3/api-docs/**").authenticated()
                 .and().authorizeHttpRequests().requestMatchers("/auth/admin/**").authenticated()
                 .and().authorizeHttpRequests().requestMatchers("/auth/user/**").authenticated()
+                .and().authorizeHttpRequests().requestMatchers("/product/**").authenticated()
+                .and().authorizeHttpRequests().requestMatchers("/order/**").authenticated()
+                .and().authorizeHttpRequests().requestMatchers("/h2-console/**").permitAll()
                 .and().formLogin() 
                 .and().build(); 
     } 
