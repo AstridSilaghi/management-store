@@ -98,6 +98,14 @@ public class Product {
 		this.isAvailable = isAvailable;
 	}
 
+	public Set<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(Set<Order> orders) {
+		this.orders = orders;
+	}
+
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", price=" + price + ", description=" + description

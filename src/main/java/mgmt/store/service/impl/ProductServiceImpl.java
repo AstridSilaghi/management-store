@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import mgmt.store.dto.ProductDto;
 import mgmt.store.dto.converter.ConvertProductDtoToEntity;
 import mgmt.store.exceptions.ProductNotFoundException;
+import mgmt.store.model.Order;
 import mgmt.store.model.Product;
+import mgmt.store.repository.OrderRepository;
 import mgmt.store.repository.ProductRepository;
 import mgmt.store.service.ProductService;
 
@@ -23,11 +25,15 @@ public class ProductServiceImpl implements ProductService {
 
 	private ProductRepository productRepo;
 
+	private OrderRepository orderRepo;
+
 	private ConvertProductDtoToEntity converter;
-	
+
 	@Autowired
-	public ProductServiceImpl(ProductRepository productRepo, ConvertProductDtoToEntity converter) {
+	public ProductServiceImpl(ProductRepository productRepo, OrderRepository orderRepo,
+			ConvertProductDtoToEntity converter) {
 		this.productRepo = productRepo;
+		this.orderRepo = orderRepo;
 		this.converter = converter;
 	}
 
@@ -48,18 +54,23 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public void deleteProductById(Long id) {
-		Optional<Product> product = productRepo.findById(id);
-		if (!product.isEmpty()) {
-			productRepo.deleteById(id);
-		} else {
-			throw new ProductNotFoundException(id);
-		}
+	public void deleteProductById(Long productId) {
+		productRepo.findById(productId).ifPresentOrElse(product -> {
+			List<Order> orders = orderRepo.getOrdersHavingProduct(productId);
+			ProductAndOrderHelper.removeProductFromOrder(product, orders);
+			productRepo.deleteById(productId);
+		}, () -> {
+			throw new ProductNotFoundException(productId);
+		});
 	}
-	
+
 	@Override
 	public void deleteAllProducts() {
-		productRepo.deleteAll();
+		productRepo.findAll().forEach(product -> {
+			List<Order> orders = orderRepo.getOrdersHavingProduct(product.getId());
+			ProductAndOrderHelper.removeProductFromOrder(product, orders);
+			productRepo.deleteById(product.getId());
+		});;
 	}
 
 	@Override
@@ -86,7 +97,7 @@ public class ProductServiceImpl implements ProductService {
 			return Optional.of(productRepo.save(product));
 		}).orElseThrow(() -> new ProductNotFoundException(id));
 	}
-	
+
 	@Override
 	public Optional<Product> updateProductName(Long id, String name) {
 		return productRepo.findById(id).map(product -> {
@@ -94,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
 			return Optional.of(productRepo.save(product));
 		}).orElseThrow(() -> new ProductNotFoundException(id));
 	}
-	
+
 	@Override
 	public Optional<Product> updateProductDescription(Long id, String description) {
 		return productRepo.findById(id).map(product -> {
@@ -102,10 +113,10 @@ public class ProductServiceImpl implements ProductService {
 			return Optional.of(productRepo.save(product));
 		}).orElseThrow(() -> new ProductNotFoundException(id));
 	}
-	
+
 	@Override
 	public List<Product> getProductsPriceGreaterThan(Long minPrice) {
-		if(minPrice == null) {
+		if (minPrice == null) {
 			log.info("Minimum price is missing");
 			return new ArrayList<>();
 		}
@@ -115,7 +126,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Product> getProductsPriceLessThan(Long maxPrice) {
-		if(maxPrice == null) {
+		if (maxPrice == null) {
 			log.info("Maximum price is missing");
 			return new ArrayList<>();
 		}
@@ -125,10 +136,10 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Product> getProductsWithinPriceRange(Long minPrice, Long maxPrice) {
-		if(minPrice == null || maxPrice == null) {
+		if (minPrice == null || maxPrice == null) {
 			log.info("Minimum or maximum price is missing");
 			return new ArrayList<>();
-		} 
+		}
 		log.info("Get the products with price in this range {} - {}", minPrice, maxPrice);
 		return productRepo.findProductWithinPriceRange(minPrice, maxPrice);
 	}

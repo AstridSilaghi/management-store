@@ -55,16 +55,23 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public void deleteOrderById(Long id) {
-		Optional<Order> order = orderRepo.findById(id);
-		if (!order.isEmpty()) {
-			orderRepo.deleteById(id);
-		}
+	public void deleteOrderById(Long orderId) {
+		orderRepo.findById(orderId).ifPresentOrElse(order -> {
+			List<Product> products = productRepo.getProductsPartOfOrder(orderId);
+			ProductAndOrderHelper.removeOrderFromProduct(order, products);
+			orderRepo.deleteById(orderId);
+		}, () -> {
+			throw new ProductNotFoundException(orderId);
+		});
 	}
 	
 	@Override
 	public void deleteAllOrders() {
-		orderRepo.deleteAll();
+		orderRepo.findAll().forEach(o -> {
+			List<Product> products = productRepo.getProductsPartOfOrder(o.getId());
+			ProductAndOrderHelper.removeOrderFromProduct(o, products);
+			orderRepo.deleteById(o.getId());
+		});;
 	}
 
 	@Override
